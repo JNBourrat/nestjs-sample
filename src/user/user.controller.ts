@@ -1,14 +1,17 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { User } from 'src/models/user.interface';
 import { identity } from 'rxjs';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
 
+  constructor(private readonly userService: UserService) { }
+
   @Get()
   getAllUsers() {
-    return `get all ok`
-    // return userService.getAllUsers();
+    // return `get all ok`
+    return this.userService.getAllUsers();
   }
 
   @Get(':id')
