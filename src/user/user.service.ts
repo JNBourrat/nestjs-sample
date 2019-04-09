@@ -4,20 +4,21 @@ import { User } from 'src/models/user.interface';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly users: User[]) {
+
+  private users: User[] = new Array<User>();
+
+  getAllUsers() {
     for (let i = 0; i < 21; i++) {
-      const newUser = {
-        lastname: faker.name.lastName() as string,
-        firstname: faker.name.firstName() as string,
-        city: faker.adress.city() as string,
-        email: faker.internet.email() as string,
-        phone: faker.phone.phoneNumber() as string,
+      const newUser: User = {
+        firstname: faker.name.firstName(),
+        lastname: faker.name.lastName(),
+        city: faker.address.city(),
+        email: faker.internet.email(),
+        phone: faker.phone.phoneNumber(),
+        lastConnection: faker.date.past(),
       };
       this.users.push(newUser);
     }
-  }
-
-  getAllUsers() {
     return this.users;
   }
 }

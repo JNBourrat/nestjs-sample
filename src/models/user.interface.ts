@@ -4,4 +4,5 @@ export interface User {
   city: string;
   email: string;
   phone: string;
+  lastConnection: Date;
 }
