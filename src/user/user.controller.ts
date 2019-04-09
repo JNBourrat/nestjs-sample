@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
-import { User } from 'src/models/user.interface';
-import { identity } from 'rxjs';
+import { Controller, Get, Post, Body, Put, Param, Delete, Req } from '@nestjs/common';
+import { UserDto } from 'src/models/user.dto';
 import { UserService } from './user.service';
+import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -15,23 +15,23 @@ export class UserController {
   }
 
   @Get(':id')
-  getOneUser(@Param('id') id) {
-    return `get one ok with id: ${id}`;
+  getOneUser(@Param('id') id, @Req() request: Request) {
+    return `get one ok with id: ${id}, & request: ${JSON.stringify(request.params)}`;
     // return userService.getOneUser(id);
   }
 
   @Post()
-  createUser(@Body() user: User) {
-    return `create ok with user: ${user}`;
+  createUser(@Body() user: UserDto) {
+    return this.userService.createUser(user);
   }
 
   @Put(':id')
-  updateUser(@Param('id') id, @Body() updatedUser: User) {
+  updateUser(@Param('id') id, @Body() updatedUser: UserDto) {
     return `put ok with id: ${id} & ${updatedUser}`;
   }
 
   @Delete(':id')
   deleteUser(@Param('id') id) {
-    return `delete ok with id: ${id}`;
+    return this.userService.deleteUser(id);
   }
 }
