@@ -1,13 +1,16 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters, UsePipes, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters, UsePipes, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { UserDto } from '../models/user.dto';
 import { UserService } from './user.service';
 import { User } from '../models/user.interface';
 import { HttpExceptionFilter } from '../filters/http-exception.filter';
 import { ValidationPipe } from '../pipes/validation.pipe';
+import { RolesGuard } from '../guards/roles.guard';
+import { Roles } from '../decorators/roles.decorator';
 
 @Controller('user')
 @UsePipes(ValidationPipe)
 @UseFilters(new HttpExceptionFilter())
+@UseGuards(RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -29,6 +32,7 @@ export class UserController {
    */
 
   @Post()
+  @Roles('admin')
   createUser(@Body() user: UserDto): User {
     return this.userService.createUser(user);
   }
