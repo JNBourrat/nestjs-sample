@@ -66,7 +66,5 @@ export class UserService {
       throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
     }
     this.users.splice(indexOldUser, 1);
-
-    return HttpStatus.OK;
   }
 }
