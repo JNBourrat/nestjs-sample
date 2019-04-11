@@ -11,10 +11,17 @@ export class UserController {
 
   /**
    *
-   * It is also possible to return rxjs' Observables like so :
+   * It is also possible to return rxjs' Observables like so:
    *
    * getAllUsers(): Observable<User[]> {
    *  return of(this.userService.getAllUsers());
+   * }
+   *
+   * It is also possible to manipulate 'classic' express response:
+   *
+   * @Post()
+   * create(@Res() res: Response) {
+   *     res.status(HttpStatus.CREATED).send();
    * }
    *
    */

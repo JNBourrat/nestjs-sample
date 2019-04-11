@@ -27,11 +27,7 @@ export class UserService {
 
   createUser(userDto: UserDto): User {
     const newUser: User = {
-      firstname: userDto.firstname,
-      lastname: userDto.lastname,
-      city: userDto.city,
-      email: userDto.email,
-      phone: userDto.phone,
+      ...userDto,
       id: this.getNewId(),
     };
     this.users.push(newUser);
