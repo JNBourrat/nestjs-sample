@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters, UsePipes } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters, UsePipes, ParseIntPipe } from '@nestjs/common';
 import { UserDto } from '../models/user.dto';
 import { UserService } from './user.service';
 import { User } from '../models/user.interface';
@@ -6,6 +6,7 @@ import { HttpExceptionFilter } from '../filters/http-exception.filter';
 import { ValidationPipe } from '../pipes/validation.pipe';
 
 @Controller('user')
+@UsePipes(ValidationPipe)
 @UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -28,7 +29,6 @@ export class UserController {
    */
 
   @Post()
-  @UsePipes(ValidationPipe)
   createUser(@Body() user: UserDto): User {
     return this.userService.createUser(user);
   }
@@ -39,18 +39,18 @@ export class UserController {
   }
 
   @Get(':id')
-  getOneUser(@Param('id') id: string): User {
+  getOneUser(@Param('id', new ParseIntPipe()) id: number): User { // String parsed into an integer value with built-in pipe
     return this.userService.getOneUser(+id);
   }
 
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() updatedUser: UserDto): User {
-    return this.userService.updateUser(+id, updatedUser);
+    return this.userService.updateUser(+id, updatedUser); // String converted into an integer value with parseInt shorthand
   }
 
   @Delete(':id')
   @HttpCode(204)
   deleteUser(@Param('id') id: string): void {
-    return this.userService.deleteUser(+id);
+    return this.userService.deleteUser(parseInt(id, 10)); // String converted into an integer value with parseInt with radix arg
   }
 }
