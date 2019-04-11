@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters } from '@nestjs/common';
 import { UserDto } from '../models/user.dto';
 import { UserService } from './user.service';
-import { Request } from 'express';
-import { Observable, of } from 'rxjs';
-import { User } from 'src/models/user.interface';
+import { User } from '../models/user.interface';
+import { HttpExceptionFilter } from '../filters/http-exception.filter';
 
 @Controller('user')
+@UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

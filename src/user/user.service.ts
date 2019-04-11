@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException, NotFoundException } from '@nestjs/common';
 import * as faker from 'faker/locale/fr';
 import { User } from 'src/models/user.interface';
 import { UserDto } from 'src/models/user.dto';
@@ -50,7 +50,7 @@ export class UserService {
     const newUser: User = { ...updatedUser, id };
     const indexOldUser = this.users.findIndex(user => user.id === id);
     if (indexOldUser === -1) {
-      throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+      throw new NotFoundException();  // OR throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
     }
     this.users[indexOldUser] = newUser;
     return newUser;
