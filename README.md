@@ -16,12 +16,14 @@ To install dependencies, run :
 
 `npm install`
 
-## Experiment with the development server
+## Experiment with the development server, using Hot Module Replacement
 
-To launch Hot Module Reload (watch mode) in dev mode, run :
+To launch Hot Module Replacement (watch mode) in dev mode, run :
     
 `npm webpack`
 
 Open another terminal and run :
 
 `npm run start:hmr`
+
+Try it out with [Postman](https://www.getpostman.com/)!
