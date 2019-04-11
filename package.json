@@ -19,7 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "webpack": "webpack --config webpack.config.js",
-    "start:webpack": "node dist/server"
+    "start:hmr": "node dist/server"
   },
   "dependencies": {
     "@nestjs/common": "^6.0.0",
@@ -41,14 +41,14 @@
     "prettier": "^1.15.3",
     "supertest": "^3.4.1",
     "ts-jest": "^23.10.5",
+    "ts-loader": "^5.3.3",
     "ts-node": "^7.0.1",
     "tsconfig-paths": "^3.7.0",
     "tslint": "5.12.1",
     "typescript": "^3.2.4",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
-    "webpack-node-externals": "^1.7.2",
-    "ts-loader": "^5.3.3"
+    "webpack-node-externals": "^1.7.2"
   },
   "jest": {
     "moduleFileExtensions": [

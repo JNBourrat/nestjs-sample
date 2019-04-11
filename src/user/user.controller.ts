@@ -5,8 +5,7 @@ import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
-
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   getAllUsers() {
@@ -15,8 +14,8 @@ export class UserController {
   }
 
   @Get(':id')
-  getOneUser(@Param('id') id, @Req() request: Request) {
-    return `get one ok with id: ${id}, & request: ${JSON.stringify(request.params)}`;
+  getOneUser(@Param('id') id: number, @Req() request: Request) {
+    return `get one ok with id: ${id}, & request: ${JSON.stringify(request.params)}!!!`;
     // return userService.getOneUser(id);
   }
 
