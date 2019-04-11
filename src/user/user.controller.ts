@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters, UsePipes, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters, UsePipes, ParseIntPipe, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserDto } from '../models/user.dto';
 import { UserService } from './user.service';
 import { User } from '../models/user.interface';
@@ -6,6 +6,7 @@ import { HttpExceptionFilter } from '../filters/http-exception.filter';
 import { ValidationPipe } from '../pipes/validation.pipe';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
+import { TransformInterceptor } from '../interceptors/transform.interceptor';
 
 @Controller('user')
 @UsePipes(ValidationPipe)
@@ -37,6 +38,7 @@ export class UserController {
   }
 
   @Get()
+  @UseInterceptors(TransformInterceptor)
   getAllUsers(): User[] {
     return this.userService.getAllUsers();
   }
