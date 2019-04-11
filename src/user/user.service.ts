@@ -1,11 +1,10 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import * as faker from 'faker/locale/fr';
 import { User } from 'src/models/user.interface';
 import { UserDto } from 'src/models/user.dto';
 
 @Injectable()
 export class UserService {
-
   private users: User[] = new Array<User>();
 
   constructor() {
@@ -23,7 +22,6 @@ export class UserService {
   }
 
   getAllUsers() {
-
     return this.users;
   }
 
@@ -41,12 +39,33 @@ export class UserService {
   }
 
   getNewId(): number {
-    return this.users.length === 0 ? 1 : Math.max(... this.users.map(user => user.id)) + 1;
+    return this.users.length === 0 ? 1 : Math.max(...this.users.map(user => user.id)) + 1;
+  }
+
+  getOneUser(id: number): User {
+    const user = this.users.find(user => user.id === id);
+    if (!user) {
+      throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
+
+  updateUser(id: number, updatedUser: UserDto): User {
+    const newUser: User = { ...updatedUser, id };
+    const indexOldUser = this.users.findIndex(user => user.id === id);
+    if (indexOldUser === -1) {
+      throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+    }
+    this.users[indexOldUser] = newUser;
+    return newUser;
   }
 
   deleteUser(id: number) {
-    const userIndex = this.users.findIndex(user => user.id === +id);
-    this.users.splice(userIndex, 1);
+    const indexOldUser = this.users.findIndex(user => user.id === id);
+    if (indexOldUser === -1) {
+      throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+    }
+    this.users.splice(indexOldUser, 1);
 
     return HttpStatus.OK;
   }

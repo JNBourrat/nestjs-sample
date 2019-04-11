@@ -14,9 +14,8 @@ export class UserController {
   }
 
   @Get(':id')
-  getOneUser(@Param('id') id: number, @Req() request: Request) {
-    return `get one ok with id: ${id}, & request: ${JSON.stringify(request.params)}!!!`;
-    // return userService.getOneUser(id);
+  getOneUser(@Param('id') id: string, @Req() request: Request) {
+    return this.userService.getOneUser(+id);
   }
 
   @Post()
@@ -25,12 +24,13 @@ export class UserController {
   }
 
   @Put(':id')
-  updateUser(@Param('id') id, @Body() updatedUser: UserDto) {
-    return `put ok with id: ${id} & ${updatedUser}`;
+  updateUser(@Param('id') id: string, @Body() updatedUser: UserDto) {
+    // return `put ok with id: ${id} & ${JSON.stringify(updatedUser)}`;
+    return this.userService.updateUser(+id, updatedUser);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id) {
-    return this.userService.deleteUser(id);
+  deleteUser(@Param('id') id: string) {
+    return this.userService.deleteUser(+id);
   }
 }
