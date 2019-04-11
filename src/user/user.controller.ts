@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters, UsePipes } from '@nestjs/common';
 import { UserDto } from '../models/user.dto';
 import { UserService } from './user.service';
 import { User } from '../models/user.interface';
 import { HttpExceptionFilter } from '../filters/http-exception.filter';
+import { ValidationPipe } from '../pipes/validation.pipe';
 
 @Controller('user')
 @UseFilters(new HttpExceptionFilter())
@@ -27,6 +28,7 @@ export class UserController {
    */
 
   @Post()
+  @UsePipes(ValidationPipe)
   createUser(@Body() user: UserDto): User {
     return this.userService.createUser(user);
   }

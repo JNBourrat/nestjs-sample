@@ -20,7 +20,7 @@ To install dependencies, run :
 
 To launch Hot Module Replacement (watch mode) in dev mode, run :
     
-`npm webpack`
+`npm run webpack`
 
 Open another terminal and run :
 

@@ -15,6 +15,7 @@ export class UserService {
         city: faker.address.city(),
         email: faker.internet.email(),
         phone: faker.phone.phoneNumber(),
+        age: Math.floor(Math.random() * 95 + 1),
         id: i + 1,
       };
       this.users.push(newUser);
