@@ -43,11 +43,11 @@ export class UserService {
   }
 
   getOneUser(id: number): User {
-    const user = this.users.find(user => user.id === id);
-    if (!user) {
+    const returnedUser = this.users.find(user => user.id === id);
+    if (!returnedUser) {
       throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
     }
-    return user;
+    return returnedUser;
   }
 
   updateUser(id: number, updatedUser: UserDto): User {

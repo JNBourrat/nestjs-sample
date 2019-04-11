@@ -1,7 +1,7 @@
 export class UserDto {
-  firstname: string;
-  lastname: string;
-  city: string;
-  email: string;
-  phone: string;
+  readonly firstname: string;
+  readonly lastname: string;
+  readonly city: string;
+  readonly email: string;
+  readonly phone: string;
 }
