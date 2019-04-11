@@ -32,7 +32,6 @@ export class UserController {
    */
 
   @Post()
-  @Roles('admin')
   createUser(@Body() user: UserDto): User {
     return this.userService.createUser(user);
   }
@@ -54,6 +53,7 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(204)
+  @Roles('admin') // For test purpose only: comment this line to deactivate the route guard 'role'
   deleteUser(@Param('id') id: string): void {
     return this.userService.deleteUser(parseInt(id, 10)); // String converted into an integer value with parseInt with radix arg
   }
