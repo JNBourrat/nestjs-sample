@@ -10,15 +10,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
+    const message = exception.message;
 
     const resBody = {
       statusCode: status,
+      error: message,
       timestamp: `(${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()})`,
       path: request.url,
     };
 
     // tslint:disable-next-line: no-console
-    console.log(`ERROR ${resBody.statusCode} - ${resBody.timestamp}`);
+    console.log(`(ERROR ${resBody.statusCode}) ${resBody.error} - ${resBody.timestamp}`);
 
     response
       .status(status)

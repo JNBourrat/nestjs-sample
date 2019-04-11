@@ -42,7 +42,7 @@ export class UserService {
   getOneUser(id: number): User {
     const returnedUser = this.users.find(user => user.id === id);
     if (!returnedUser) {
-      throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+      throw new HttpException('USER NOT FOUND', HttpStatus.NOT_FOUND);
     }
     return returnedUser;
   }
@@ -60,7 +60,7 @@ export class UserService {
   deleteUser(id: number) {
     const indexOldUser = this.users.findIndex(user => user.id === id);
     if (indexOldUser === -1) {
-      throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+      throw new HttpException('USER NOT FOUND', HttpStatus.NOT_FOUND);
     }
     this.users.splice(indexOldUser, 1);
   }
