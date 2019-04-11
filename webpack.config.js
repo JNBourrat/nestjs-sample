@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: ['webpack/hot/poll?100', './src/main.ts'],
@@ -22,7 +23,11 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
-  plugins: [new webpack.HotModuleReplacementPlugin(), new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/])],
+  plugins: [
+    new CleanWebpackPlugin({}),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/])
+  ],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'server.js',
