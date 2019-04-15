@@ -21,8 +21,10 @@ import { ValidationPipe } from '../pipes/validation.pipe';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { TransformInterceptor } from '../interceptors/transform.interceptor';
+import { plainToClass } from 'class-transformer';
+import { TransformToUserDtoInterceptor } from '../interceptors/transformToUserDto.interceptor';
 
-@Controller('user')
+@Controller('users')
 @UsePipes(ValidationPipe)
 @UseFilters(new HttpExceptionFilter())
 @UseGuards(RolesGuard)
@@ -47,13 +49,13 @@ export class UserController {
    */
 
   @Post()
-  createUser(@Body() user: UserDto): User {
+  createUser(@Body() user: UserDto): UserDto {
     return this.userService.createUser(user);
   }
 
   @Get()
-  @UseInterceptors(TransformInterceptor)
-  getAllUsers(): User[] {
+  @UseInterceptors(new TransformToUserDtoInterceptor(UserDto))
+  getAllUsers(): UserDto[] {
     return this.userService.getAllUsers();
   }
 
@@ -64,7 +66,7 @@ export class UserController {
   }
 
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() updatedUser: UserDto): User {
+  updateUser(@Param('id') id: string, @Body() updatedUser: UserDto): UserDto {
     return this.userService.updateUser(+id, updatedUser); // String converted into an integer value with parseInt shorthand
   }
 

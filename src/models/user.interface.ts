@@ -6,4 +6,5 @@ export interface User {
   phone: string;
   id: number;
   age: number;
+  creationDay: Date;
 }

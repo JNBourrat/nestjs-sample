@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { User } from 'src/models/user.interface';
+import { UserDto } from 'src/models/user.dto';
 
 describe('User Controller', () => {
   let userController: UserController;
@@ -18,15 +18,14 @@ describe('User Controller', () => {
   });
 
   describe('getAllUsers', () => {
-    it('should return an array of users', async () => {
-      const user: User = {
+    it('should return an array of userDto', async () => {
+      const user: UserDto = {
         firstname: 'John',
         lastname: 'Doe',
         age: 19,
         city: 'San Francisco',
         email: 'doe.john@gmail.com',
         phone: '0681036896',
-        id: 0,
       };
       const result = [user];
       jest.spyOn(userService, 'getAllUsers').mockImplementation(() => result);

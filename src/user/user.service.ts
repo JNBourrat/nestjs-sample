@@ -17,19 +17,21 @@ export class UserService {
         phone: faker.phone.phoneNumber(),
         age: Math.floor(Math.random() * 95 + 1),
         id: i + 1,
+        creationDay: faker.date.past(),
       };
       this.users.push(newUser);
     }
   }
 
-  getAllUsers() {
+  getAllUsers(): UserDto[] {
     return this.users;
   }
 
-  createUser(userDto: UserDto): User {
+  createUser(userDto: UserDto): UserDto {
     const newUser: User = {
       ...userDto,
       id: this.getNewId(),
+      creationDay: new Date(),
     };
     this.users.push(newUser);
     return newUser;
@@ -47,11 +49,11 @@ export class UserService {
     return returnedUser;
   }
 
-  updateUser(id: number, updatedUser: UserDto): User {
-    const newUser: User = { ...updatedUser, id };
+  updateUser(id: number, updatedUser: UserDto): UserDto {
+    const newUser: User = { ...updatedUser, id, creationDay: new Date() };
     const indexOldUser = this.users.findIndex(user => user.id === id);
     if (indexOldUser === -1) {
-      throw new NotFoundException();  // OR throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+      throw new NotFoundException(); // OR throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
     }
     this.users[indexOldUser] = newUser;
     return newUser;
