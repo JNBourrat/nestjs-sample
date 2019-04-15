@@ -18,6 +18,7 @@ export class UserService {
         age: Math.floor(Math.random() * 95 + 1),
         id: i + 1,
         creationDay: faker.date.past(),
+        password: faker.internet.password(),
       };
       this.users.push(newUser);
     }
@@ -32,6 +33,7 @@ export class UserService {
       ...userDto,
       id: this.getNewId(),
       creationDay: new Date(),
+      password: faker.internet.password(),
     };
     this.users.push(newUser);
     return newUser;
@@ -50,7 +52,12 @@ export class UserService {
   }
 
   updateUser(id: number, updatedUser: UserDto): UserDto {
-    const newUser: User = { ...updatedUser, id, creationDay: new Date() };
+    const newUser: User = {
+      ...updatedUser,
+      id,
+      creationDay: new Date(),
+      password: faker.internet.password(),
+    };
     const indexOldUser = this.users.findIndex(user => user.id === id);
     if (indexOldUser === -1) {
       throw new NotFoundException(); // OR throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
