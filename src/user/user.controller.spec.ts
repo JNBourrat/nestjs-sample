@@ -1,25 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { async } from 'rxjs/internal/scheduler/async';
 import { User } from 'src/models/user.interface';
 
 describe('User Controller', () => {
   let userController: UserController;
   let userService: UserService;
 
-  // beforeEach(async () => {
-  //   const module: TestingModule = await Test.createTestingModule({
-  //     controllers: [UserController],
-  //     providers: [],
-  //   }).compile();
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [UserController],
+      providers: [UserService],
+    }).compile();
 
-  // userController = module.get<UserController>(UserController);
-  // });
-
-  beforeEach(() => {
-    userService = new UserService();
-    userController = new UserController(userService);
+    userController = module.get<UserController>(UserController);
+    userService = module.get<UserService>(UserService);
   });
 
   describe('getAllUsers', () => {
