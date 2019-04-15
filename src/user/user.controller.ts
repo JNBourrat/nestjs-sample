@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, UseFilters, UsePipes, ParseIntPipe, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  HttpCode,
+  UseFilters,
+  UsePipes,
+  ParseIntPipe,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserDto } from '../models/user.dto';
 import { UserService } from './user.service';
 import { User } from '../models/user.interface';
@@ -44,7 +58,8 @@ export class UserController {
   }
 
   @Get(':id')
-  getOneUser(@Param('id', new ParseIntPipe()) id: number): User { // String parsed into an integer value with built-in pipe
+  getOneUser(@Param('id', new ParseIntPipe()) id: number): User {
+    // String parsed into an integer value with built-in pipe
     return this.userService.getOneUser(+id);
   }
 
