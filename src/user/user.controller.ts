@@ -21,8 +21,7 @@ import { ValidationPipe } from '../pipes/validation.pipe';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { TransformInterceptor } from '../interceptors/transform.interceptor';
-import { plainToClass } from 'class-transformer';
-import { TransformToUserDtoInterceptor } from '../interceptors/transformToUserDto.interceptor';
+import { TransformPlainToClass } from 'class-transformer';
 
 @Controller('users')
 @UsePipes(ValidationPipe)
@@ -31,41 +30,28 @@ import { TransformToUserDtoInterceptor } from '../interceptors/transformToUserDt
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  /**
-   *
-   * It is also possible to return rxjs' Observables like so:
-   *
-   * getAllUsers(): Observable<User[]> {
-   *  return of(this.userService.getAllUsers());
-   * }
-   *
-   * It is also possible to manipulate 'classic' express response:
-   *
-   * @Post()
-   * create(@Res() res: Response) {
-   *     res.status(HttpStatus.CREATED).send();
-   * }
-   *
-   */
-
   @Post()
+  @TransformPlainToClass(UserDto)
   createUser(@Body() user: UserDto): UserDto {
     return this.userService.createUser(user);
   }
 
   @Get()
-  @UseInterceptors(new TransformToUserDtoInterceptor(UserDto))
+  @TransformPlainToClass(UserDto)
+  @UseInterceptors(TransformInterceptor)
   getAllUsers(): UserDto[] {
     return this.userService.getAllUsers();
   }
 
   @Get(':id')
-  getOneUser(@Param('id', new ParseIntPipe()) id: number): User {
+  @TransformPlainToClass(UserDto)
+  getOneUser(@Param('id', new ParseIntPipe()) id: number): UserDto {
     // String parsed into an integer value with built-in pipe
     return this.userService.getOneUser(+id);
   }
 
   @Put(':id')
+  @TransformPlainToClass(UserDto)
   updateUser(@Param('id') id: string, @Body() updatedUser: UserDto): UserDto {
     return this.userService.updateUser(+id, updatedUser); // String converted into an integer value with parseInt shorthand
   }

@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsEmail, IsPhoneNumber } from 'class-validator';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
@@ -20,10 +20,10 @@ export class UserDto {
   readonly city: string;
 
   @Expose()
-  @IsString()
+  @IsEmail()
   readonly email: string;
 
   @Expose()
-  @IsString()
+  @IsPhoneNumber('FR')
   readonly phone: string;
 }
