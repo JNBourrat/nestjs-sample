@@ -1,9 +1,12 @@
-
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { MyLogger } from '../middlewares/logger.middleware';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
+  private readonly logger = new MyLogger(this.errorContext, true);
+
+  constructor(private errorContext: string) {}
 
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -20,10 +23,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
 
     // tslint:disable-next-line: no-console
-    console.log(`(ERROR ${resBody.statusCode}) ${resBody.error} - ${resBody.timestamp}`);
+    this.logger.error(`(ERROR ${resBody.statusCode}) ${resBody.error} - ${resBody.timestamp}`);
 
-    response
-      .status(status)
-      .json(resBody);
+    response.status(status).json(resBody);
   }
 }

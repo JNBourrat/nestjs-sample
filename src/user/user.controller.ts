@@ -12,6 +12,8 @@ import {
   ParseIntPipe,
   UseGuards,
   UseInterceptors,
+  Logger,
+  Req,
 } from '@nestjs/common';
 import { UserDto } from '../models/user.dto';
 import { UserService } from './user.service';
@@ -22,12 +24,15 @@ import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { TransformInterceptor } from '../interceptors/transform.interceptor';
 import { TransformPlainToClass } from 'class-transformer';
+import { MyLogger } from '../middlewares/logger.middleware';
 
 @Controller('users')
 @UsePipes(ValidationPipe)
-@UseFilters(new HttpExceptionFilter())
+@UseFilters(new HttpExceptionFilter(UserController.name))
 @UseGuards(RolesGuard)
 export class UserController {
+  private readonly logger = new MyLogger(UserController.name, true);
+
   constructor(private readonly userService: UserService) {}
 
   @Post()
@@ -39,7 +44,10 @@ export class UserController {
   @Get()
   @TransformPlainToClass(UserDto)
   @UseInterceptors(TransformInterceptor)
-  getAllUsers(): UserDto[] {
+  getAllUsers(@Req() req): UserDto[] {
+    this.logger.log(
+      `Request: ${req.method} - ${req.originalUrl} - ${req.get('Content-Length') || 0}b received`,
+    );
     return this.userService.getAllUsers();
   }
 
