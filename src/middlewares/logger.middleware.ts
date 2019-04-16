@@ -1,3 +1,8 @@
+import { Logger } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+
+export class MyLogger extends Logger {}
+
 // export function logger(req, res, next) {
 //   // tslint:disable-next-line: no-console
 //   console.log(
@@ -5,7 +10,3 @@
 //   );
 //   next();
 // }
-
-import { Logger } from '@nestjs/common';
-
-export class MyLogger extends Logger {}

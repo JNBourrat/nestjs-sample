@@ -23,7 +23,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
 
     // tslint:disable-next-line: no-console
-    this.logger.error(`(ERROR ${resBody.statusCode}) ${resBody.error} - ${resBody.timestamp}`);
+    this.logger.error(`(ERROR ${resBody.statusCode}) ${resBody.error}`);
 
     response.status(status).json(resBody);
   }
