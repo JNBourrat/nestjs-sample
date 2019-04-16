@@ -60,7 +60,7 @@ export class UserService {
     };
     const indexOldUser = this.users.findIndex(user => user.id === id);
     if (indexOldUser === -1) {
-      throw new NotFoundException(); // OR throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+      throw new HttpException('USER NOT FOUND', HttpStatus.NOT_FOUND);
     }
     this.users[indexOldUser] = newUser;
     return newUser;
