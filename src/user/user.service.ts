@@ -2,12 +2,16 @@ import { Injectable, HttpStatus, HttpException, NotFoundException } from '@nestj
 import * as faker from 'faker/locale/fr';
 import { User } from 'src/models/user.interface';
 import { UserDto } from 'src/models/user.dto';
+import { ConfigService } from '../config/config-service';
+import { MyLogger } from '../middlewares/logger.middleware';
 
 @Injectable()
 export class UserService {
   private users: User[] = new Array<User>();
+  private readonly logger = new MyLogger(UserService.name, true);
 
-  constructor() {
+  constructor(private config: ConfigService) {
+    this.logger.warn(`Env: ${this.config.get('TEST')}`);
     for (let i = 0; i < 21; i++) {
       const newUser: User = {
         firstname: faker.name.firstName(),
@@ -43,7 +47,7 @@ export class UserService {
     return this.users.length === 0 ? 1 : Math.max(...this.users.map(user => user.id)) + 1;
   }
 
-  getOneUser(id: number): User {
+  getUserById(id: number): User {
     const returnedUser = this.users.find(user => user.id === id);
     if (!returnedUser) {
       throw new HttpException('USER NOT FOUND', HttpStatus.NOT_FOUND);

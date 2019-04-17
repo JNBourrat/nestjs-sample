@@ -12,7 +12,6 @@ import {
   ParseIntPipe,
   UseGuards,
   UseInterceptors,
-  Req,
 } from '@nestjs/common';
 import { UserDto } from '../models/user.dto';
 import { UserService } from './user.service';
@@ -24,10 +23,8 @@ import { TransformInterceptor } from '../interceptors/transform.interceptor';
 import { TransformPlainToClass } from 'class-transformer';
 import { MyLogger } from '../middlewares/logger.middleware';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
 
 @Controller('users')
-@UseGuards(AuthGuard())
 @UsePipes(ValidationPipe)
 @UseFilters(new HttpExceptionFilter(UserController.name))
 @UseGuards(RolesGuard)
@@ -43,29 +40,30 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(AuthGuard())
   @TransformPlainToClass(UserDto)
   @UseInterceptors(TransformInterceptor)
-  getAllUsers(@Req() req: Request): UserDto[] {
-    this.logger.log(
-      `Request: ${req.method} - ${req.originalUrl} - ${req.get('Content-Length') || 0}b received`,
-    );
+  findAllUsers(): UserDto[] {
     return this.userService.getAllUsers();
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard())
   @TransformPlainToClass(UserDto)
-  getOneUser(@Param('id', new ParseIntPipe()) id: number): UserDto {
+  findById(@Param('id', new ParseIntPipe()) id: number): UserDto {
     // String parsed into an integer value with built-in pipe
-    return this.userService.getOneUser(+id);
+    return this.userService.getUserById(+id);
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard())
   @TransformPlainToClass(UserDto)
   updateUser(@Param('id') id: string, @Body() updatedUser: UserDto): UserDto {
     return this.userService.updateUser(+id, updatedUser); // String converted into an integer value with parseInt shorthand
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard())
   @HttpCode(204)
   @Roles('admin') // For test purpose only: comment this line to deactivate the route guard 'role'
   deleteUser(@Param('id') id: string): void {

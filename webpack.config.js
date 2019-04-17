@@ -3,9 +3,8 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-module.exports = {
-  entry: ['webpack/hot/poll?100', './src/main.ts'],
-  watch: true,
+var config = {
+  entry: ['./src/main.ts'],
   target: 'node',
   externals: [
     nodeExternals({
@@ -19,17 +18,28 @@ module.exports = {
       exclude: /node_modules/,
     }, ],
   },
-  mode: 'development',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
-  plugins: [
-    new CleanWebpackPlugin({}),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/])
-  ],
+  plugins: [],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'server.js',
   },
+}
+
+module.exports = (env, argv) => {
+
+  if (argv.mode === 'development') {
+
+    config.watch = true,
+      config.entry = ['./src/main-hmr.ts']
+    config.plugins = [
+      new CleanWebpackPlugin({}),
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/])
+    ]
+  }
+
+  return config;
 };

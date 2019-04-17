@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from 'src/models/user.interface';
-import { of } from 'rxjs';
 
 describe('User Controller', () => {
   let userController: UserController;
@@ -34,7 +33,7 @@ describe('User Controller', () => {
       const result = [user];
       jest.spyOn(userService, 'getAllUsers').mockImplementation(() => result);
 
-      // expect(await userController.getAllUsers()).toBe(result);
+      // expect(await userController.findAllUsers()).toBe(result);
     });
   });
 });
