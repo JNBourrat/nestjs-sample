@@ -20,7 +20,7 @@
     "e2e": "jest --config=test/jest-e2e.json --forceExit",
     "e2e:watch": "jest --watch --config=test/jest-e2e.json",
     "webpack:dev": "webpack --config webpack.config.js --mode=development",
-    "start:hmr": "node dist/server"
+    "start:hmr": "nodemon dist/server"
   },
   "dependencies": {
     "@nestjs/common": "^6.0.0",
@@ -42,6 +42,7 @@
     "@types/jest": "^23.3.13",
     "@types/node": "^10.12.18",
     "@types/supertest": "^2.0.7",
+    "bcrypt": "^3.0.6",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
     "clean-webpack-plugin": "^2.0.1",

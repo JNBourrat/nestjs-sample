@@ -22,17 +22,17 @@ export class UserService {
         age: Math.floor(Math.random() * 95 + 1),
         id: i + 1,
         creationDay: faker.date.past(),
-        password: faker.internet.password(),
+        password: process.env.NODE_ENV === 'dev' ? 'password' : faker.internet.password(),
       };
       this.users.push(newUser);
     }
   }
 
-  getAllUsers(): UserDto[] {
+  getAllUsers(): User[] {
     return this.users;
   }
 
-  createUser(userDto: UserDto): UserDto {
+  createUser(userDto: UserDto): User {
     const newUser: User = {
       ...userDto,
       id: this.getNewId(),
@@ -55,7 +55,7 @@ export class UserService {
     return returnedUser;
   }
 
-  updateUser(id: number, updatedUser: UserDto): UserDto {
+  updateUser(id: number, updatedUser: UserDto): User {
     const newUser: User = {
       ...updatedUser,
       id,

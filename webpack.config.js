@@ -5,6 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 var config = {
   entry: ['./src/main.ts'],
+  watch: false,
   target: 'node',
   externals: [
     nodeExternals({
@@ -21,7 +22,11 @@ var config = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
-  plugins: [],
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('prod'),
+    }),
+  ],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'server.js',
@@ -30,16 +35,16 @@ var config = {
 
 module.exports = (env, argv) => {
 
-  if (argv.mode === 'development') {
-
-    config.watch = true,
-      config.entry = ['./src/main-hmr.ts']
-    config.plugins = [
-      new CleanWebpackPlugin({}),
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/])
-    ]
-  }
+  config.watch = true;
+  config.entry = ['./src/main-hmr.ts'];
+  config.plugins = [
+    new CleanWebpackPlugin({}),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('dev'),
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/])
+  ];
 
   return config;
 };

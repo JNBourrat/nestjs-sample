@@ -7,14 +7,15 @@ import { LoginUserDto } from '../models/login-user.dto';
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
-  async validateUserById(loginAttempt: LoginUserDto) {
+
+  async validateUserByPassword(loginAttempt: LoginUserDto) {
     const userToAttempt = await this.userService.getUserById(loginAttempt.id);
 
     return new Promise(resolve => {
-      if (!userToAttempt) {
+      if (!userToAttempt || userToAttempt.password !== loginAttempt.password) {
         throw new HttpException('USER NOT AUTHORIZED', HttpStatus.UNAUTHORIZED);
       } else {
-        resolve(this.signIn(loginAttempt.password));
+        resolve(this.signIn(loginAttempt.id));
       }
     });
   }
@@ -23,8 +24,8 @@ export class AuthService {
     return await this.userService.getUserById(payload.id);
   }
 
-  async signIn(userId: number): Promise<string> {
-    const data: JwtPayload = { id: userId };
+  async signIn(id: number): Promise<string> {
+    const data: JwtPayload = { id };
     return this.jwtService.sign(data);
   }
 }
