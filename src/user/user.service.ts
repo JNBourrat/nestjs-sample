@@ -4,6 +4,8 @@ import { User } from 'src/models/user.interface';
 import { UserDto } from 'src/models/user.dto';
 import { ConfigService } from '../config/config-service';
 import { MyLogger } from '../middlewares/logger.middleware';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
@@ -30,6 +32,32 @@ export class UserService {
 
   getAllUsers(): User[] {
     return this.users;
+  }
+
+  getAllUsersAsync(): Observable<User[]> {
+    return this.getUsersFromDb();
+  }
+
+  getUsersFromDb() {
+    const userTable: User[] = new Array<User>();
+    const user$: Observable<User[]> = of(userTable);
+    setTimeout(() => {
+      for (let i = 0; i < 21; i++) {
+        const newUser: User = {
+          firstname: faker.name.firstName(),
+          lastname: faker.name.lastName(),
+          city: faker.address.city(),
+          email: faker.internet.email(),
+          phone: faker.phone.phoneNumber(),
+          age: Math.floor(Math.random() * 95 + 1),
+          id: i + 1,
+          creationDay: faker.date.past(),
+          password: process.env.NODE_ENV === 'dev' ? 'password' : faker.internet.password(),
+        };
+        userTable.push(newUser);
+      }
+    }, 1000);
+    return user$;
   }
 
   createUser(userDto: UserDto): User {
