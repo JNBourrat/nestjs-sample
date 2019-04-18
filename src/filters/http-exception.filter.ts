@@ -17,7 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const resBody = {
       statusCode: status,
-      error: message,
+      error: JSON.stringify(message),
       timestamp: `(${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()})`,
       path: request.url,
     };

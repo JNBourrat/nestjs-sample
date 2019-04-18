@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^6.0.0",
     "dotenv": "^7.0.0",
     "faker": "^4.1.0",
+    "passport-azure-ad": "^4.0.0",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
