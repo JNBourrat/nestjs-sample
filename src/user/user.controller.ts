@@ -24,31 +24,43 @@ import { TransformPlainToClass } from 'class-transformer';
 import { MyLogger } from '../middlewares/logger.middleware';
 import { AuthGuard } from '@nestjs/passport';
 
+// TODO: try and find a way to dynamically retrieve the name of the handler on which the @UseFilter()
+// is applied and use it to send it as an HttpExceptionFilter argument for logging purposes
 @Controller('users')
 @UsePipes(ValidationPipe)
-@UseFilters(new HttpExceptionFilter(UserController.name))
 @UseGuards(RolesGuard)
 export class UserController {
-  private readonly logger = new MyLogger(UserController.name, true);
+  private readonly logger = new MyLogger(UserController.name);
 
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @UseFilters(
+    new HttpExceptionFilter(`${UserController.name} - ${UserController.prototype.createUser.name}`),
+  )
   @TransformPlainToClass(UserDto)
   createUser(@Body() user: UserDto): UserDto {
     return this.userService.createUser(user);
   }
 
   @Get()
+  @UseFilters(
+    new HttpExceptionFilter(
+      `${UserController.name}, ${UserController.prototype.findAllUsers.name}`,
+    ),
+  )
   @UseGuards(AuthGuard())
-  @TransformPlainToClass(UserDto)
   @UseInterceptors(TransformInterceptor)
+  @TransformPlainToClass(UserDto)
   findAllUsers(): UserDto[] {
     return this.userService.getAllUsers();
   }
 
   @Get(':id')
   @UseGuards(AuthGuard())
+  @UseFilters(
+    new HttpExceptionFilter(`${UserController.name} - ${UserController.prototype.findById.name}`),
+  )
   @TransformPlainToClass(UserDto)
   findById(@Param('id', new ParseIntPipe()) id: number): UserDto {
     // String parsed into an integer value with built-in pipe
@@ -57,6 +69,9 @@ export class UserController {
 
   @Put(':id')
   @UseGuards(AuthGuard())
+  @UseFilters(
+    new HttpExceptionFilter(`${UserController.name} - ${UserController.prototype.updateUser.name}`),
+  )
   @TransformPlainToClass(UserDto)
   updateUser(@Param('id') id: string, @Body() updatedUser: UserDto): UserDto {
     return this.userService.updateUser(+id, updatedUser); // String converted into an integer value with parseInt shorthand
@@ -64,6 +79,9 @@ export class UserController {
 
   @Delete(':id')
   @UseGuards(AuthGuard())
+  @UseFilters(
+    new HttpExceptionFilter(`${UserController.name} - ${UserController.prototype.deleteUser.name}`),
+  )
   @HttpCode(204)
   @Roles('admin') // For test purpose only: comment this line to deactivate the route guard 'role'
   deleteUser(@Param('id') id: string): void {

@@ -8,7 +8,7 @@ import { MyLogger } from '../middlewares/logger.middleware';
 @Injectable()
 export class UserService {
   private users: User[] = new Array<User>();
-  private readonly logger = new MyLogger(UserService.name, true);
+  private readonly logger = new MyLogger(UserService.name);
 
   constructor(private config: ConfigService) {
     this.logger.warn(`Env: ${this.config.get('TEST')}`);
@@ -37,7 +37,7 @@ export class UserService {
       ...userDto,
       id: this.getNewId(),
       creationDay: new Date(),
-      password: faker.internet.password(),
+      password: 'password',
     };
     this.users.push(newUser);
     return newUser;
