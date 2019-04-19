@@ -1,12 +1,10 @@
-import { Injectable, HttpStatus, HttpException, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import * as faker from 'faker/locale/fr';
 import { User } from 'src/models/user.interface';
 import { UserDto } from 'src/models/user.dto';
 import { ConfigService } from '../config/config-service';
 import { MyLogger } from '../middlewares/logger.middleware';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { TransformPlainToClass, plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UserService {
