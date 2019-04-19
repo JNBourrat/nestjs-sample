@@ -23,7 +23,7 @@ export class UserService {
         age: Math.floor(Math.random() * 95 + 1),
         id: i + 1,
         creationDay: faker.date.past(),
-        password: process.env.NODE_ENV === 'dev' ? 'password' : faker.internet.password(),
+        password: this.config.get('dev_mode') ? 'password' : faker.internet.password(),
       };
       this.users.push(newUser);
     }
