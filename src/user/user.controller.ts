@@ -20,15 +20,19 @@ import { ValidationPipe } from '../pipes/validation.pipe';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { TransformInterceptor } from '../interceptors/transform.interceptor';
-import { TransformPlainToClass } from 'class-transformer';
+import { TransformPlainToClass, plainToClass } from 'class-transformer';
 import { MyLogger } from '../middlewares/logger.middleware';
 import { AuthGuard } from '@nestjs/passport';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { User } from '../models/user.interface';
 
 // TODO: try and find a way to dynamically retrieve the name of the handler on which the @UseFilter()
 // is applied and use it to send it as an HttpExceptionFilter argument for logging purposes
 @Controller('users')
 @UsePipes(ValidationPipe)
 @UseGuards(RolesGuard)
+@UseInterceptors(TransformInterceptor)
 export class UserController {
   private readonly logger = new MyLogger(UserController.name);
 
@@ -38,9 +42,8 @@ export class UserController {
   @UseFilters(
     new HttpExceptionFilter(`${UserController.name} - ${UserController.prototype.createUser.name}`),
   )
-  @TransformPlainToClass(UserDto)
-  createUser(@Body() user: UserDto): UserDto {
-    return this.userService.createUser(user);
+  createUser(@Body() user: UserDto): Observable<UserDto> {
+    return this.userService.createUser(user).pipe(map(value => plainToClass(UserDto, value)));
   }
 
   @Get()
@@ -50,10 +53,8 @@ export class UserController {
     ),
   )
   @UseGuards(AuthGuard())
-  @UseInterceptors(TransformInterceptor)
-  @TransformPlainToClass(UserDto)
-  findAllUsers(): UserDto[] {
-    return this.userService.getAllUsers();
+  findAllUsers(): Observable<UserDto[]> {
+    return this.userService.getAllUsers().pipe(map(value => plainToClass(UserDto, value)));
   }
 
   @Get(':id')
@@ -61,10 +62,9 @@ export class UserController {
   @UseFilters(
     new HttpExceptionFilter(`${UserController.name} - ${UserController.prototype.findById.name}`),
   )
-  @TransformPlainToClass(UserDto)
-  findById(@Param('id', new ParseIntPipe()) id: number): UserDto {
-    // String parsed into an integer value with built-in pipe
-    return this.userService.getUserById(+id);
+  // String parsed into an integer value with built-in pipe
+  findById(@Param('id', new ParseIntPipe()) id: number): Observable<UserDto> {
+    return this.userService.getUserById(+id).pipe(map(value => plainToClass(UserDto, value)));
   }
 
   @Put(':id')
@@ -72,9 +72,10 @@ export class UserController {
   @UseFilters(
     new HttpExceptionFilter(`${UserController.name} - ${UserController.prototype.updateUser.name}`),
   )
-  @TransformPlainToClass(UserDto)
-  updateUser(@Param('id') id: string, @Body() updatedUser: UserDto): UserDto {
-    return this.userService.updateUser(+id, updatedUser); // String converted into an integer value with parseInt shorthand
+  updateUser(@Param('id') id: string, @Body() updatedUser: UserDto): Observable<UserDto> {
+    return this.userService
+      .updateUser(+id, updatedUser) // String converted into an integer value with parseInt shorthand
+      .pipe(map(value => plainToClass(UserDto, value)));
   }
 
   @Delete(':id')

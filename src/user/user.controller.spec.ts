@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from 'src/models/user.interface';
+import { of } from 'rxjs';
+import { plainToClass } from 'class-transformer';
+import { UserDto } from '../models/user.dto';
 
 describe('User Controller', () => {
   let userController: UserController;
@@ -31,9 +34,10 @@ describe('User Controller', () => {
         password: 'password',
       };
       const result = [user];
-      jest.spyOn(userService, 'getAllUsers').mockImplementation(() => result);
+      jest.spyOn(userService, 'getAllUsers').mockImplementation(() => of(result));
 
-      // expect(await userController.findAllUsers()).toBe(result);
+      expect(await userController.findAllUsers()).toBe(plainToClass(UserDto, result));
+      expect(await userController.findAllUsers()).toBeInstanceOf(UserDto);
     });
   });
 });
